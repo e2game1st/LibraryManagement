@@ -63,7 +63,7 @@ void makeFile()
 	//< 파일 닫기
 	puts("index.txt 생성완료");
 	fclose(fp);
-	
+
 	//< 파일 오픈
 	if ((fp = fileOpen("memberInfo.txt", "w+")) == NULL)
 	{
@@ -85,10 +85,10 @@ int limitInput(char* str, const int length)
 {
 	while (TRUE)
 	{
-		size_t num = 0;
+		int num = 0;
 		inputString(str);
 		num = strlen(str);
-		if(num >= length)
+		if (num >= length)
 		{
 			puts("입력오류:글자제한초과");
 		}
@@ -166,43 +166,43 @@ void registrationMember(void)
 		switch (inputCommand)
 		{
 			//< 종료
-			case END: { system("pause"); return; }break;
+		case END: { system("pause"); return; }break;
 			//< 가입
-			case REGESTRATION:
+		case REGESTRATION:
+		{
+			/*
+			ID : 고유ID관리(???)(자동관리하기) - 순차관리
+			이름 : 중복가능
+			주소 : 문자열관리(40자까지입력가능) 한글기준
+			주민번호 : 중복가능(6자 체크가입 - 000405(6자리확인)
+			hp번호 : -를 제외한 번호입력(01044446666)
+			email : 그냥 알아서 가입(문자열처리) 길이제한(40자)
+			빌린책정보 : 총 몇 10 권
+			(ID , 도서명 )(ID는 도서등록시 부여된ID)
+			*/
+			//< 정보입력
+			while (TRUE)
 			{
-				/*
-				ID : 고유ID관리(???)(자동관리하기) - 순차관리
-				이름 : 중복가능
-				주소 : 문자열관리(40자까지입력가능) 한글기준
-				주민번호 : 중복가능(6자 체크가입 - 000405(6자리확인)
-				hp번호 : -를 제외한 번호입력(01044446666)
-				email : 그냥 알아서 가입(문자열처리) 길이제한(40자)
-				빌린책정보 : 총 몇 10 권
-				(ID , 도서명 )(ID는 도서등록시 부여된ID)
-				*/
-				//< 정보입력
-				while (TRUE)
-				{
-					printf("이름 : ");
-					limitInput(member.name, MAX_LENGTH);					
-					printf("주소 : ");
-					limitInput(member.address, MAX_LENGTH); 
-					printf("주민번호 : ");
-					limitInput(member.signNumber, MAXSIGN);
-					printf("핸드폰번호 : ");
-					limitInput(member.phoneNumber, MAX_LENGTH);
-					printf("E-Mail : ");
-					limitInput(member.email, MAX_LENGTH);
-				}
-				for (i = 0; i < MAXBOOK; i++)
-				{
-					member.bookList[i] = 0;
-				}
-				maxIndex++;
-				curIndex++;
-				member.id = maxIndex;
+				printf("이름 : ");
+				limitInput(member.name, MAX_LENGTH);
+				printf("주소 : ");
+				limitInput(member.address, MAX_LENGTH);
+				printf("주민번호 : ");
+				limitInput(member.signNumber, MAXSIGN);
+				printf("핸드폰번호 : ");
+				limitInput(member.phoneNumber, MAX_LENGTH);
+				printf("E-Mail : ");
+				limitInput(member.email, MAX_LENGTH);
 			}
-			break;
+			for (i = 0; i < MAXBOOK; i++)
+			{
+				member.bookList[i] = 0;
+			}
+			maxIndex++;
+			curIndex++;
+			member.id = maxIndex;
+		}
+		break;
 		}
 		//< 인덱스 저장
 		//< 파일 오픈
@@ -238,6 +238,7 @@ void registrationMember(void)
 void searchMember()
 {
 	int i = 0;
+	int j = 0;
 	int choiceUser = 0;
 	int selectMode = 0;
 	int index = saveIndexNumber();
@@ -257,59 +258,71 @@ void searchMember()
 	//파일 닫기
 	fclose(fp);
 
-
-	printf("찾으실 회원의 주민등록번호 앞 6자리를 입력 하세요\n");
-	inputString(inputsignNumber);
-
-	/*if (strlen(inputsignNumber) != 6)
+	while (TRUE)
 	{
-	printf("주민등록번호 앞자리는 6자리 입니다.");
-	Sleep(1000);
-	system("cls");
-	printUser(index);
-	}*/
-	system("cls");
-	//입력받은 주민 등록 번호와 저장된 주민등록 번호가 일치 하면 화면에 출력
-	for (i = 0; i < index; i++)
-	{
-		if (strcmp(inputsignNumber, save[i].signNumber) == 0)
+		printf("찾으실 회원의 주민등록번호 앞 6자리를 입력 하세요\n");
+		inputString(inputsignNumber);
+
+		if (strlen(inputsignNumber) != 6)
 		{
-			printf("회원 번호 : %d\n", save[i].id);
-			printf("\t이름 : %s\n", save[i].name);
-			printf("\t주소 : %s\n", save[i].address);
-			printf("\t주민등록번호 : %s\n", save[i].signNumber);
-			printf("\t휴대폰 번호 : %s\n", save[i].phoneNumber);
-			printf("\t이메일 : %s\n", save[i].email);
-			//printf("\t빌린책 : %d\n", save[i].bookList);
-
+			printf("주민등록번호 앞자리는 6자리 입니다.");
+			Sleep(1000);
+			system("cls");
 		}
-	}
 
-	printf("수정 또는 삭제하실 회원 번호를 입력 하세요\n");
-	choiceUser = inputNumber();
+		system("cls");
+		puts("------------------------------------------- 회원정보 ----------------------------------------------");
+		puts("");
+		printf("%4s%8s%20s%15s%15s%20s%15s\n",
+			"ID", "이름", "주소", "주민번호", "hp", "email", "빌린책정보");
+		puts("");
+		puts("---------------------------------------------------------------------------------------------------");
 
-	system("cls");
-	printf("수정 또는 삭제를 선택 하세요\n");
-	printf("1. 수정\n");
-	printf("2. 삭제\n");
-	printf("0. 이전 메뉴로\n");
-	printf("선택 : ");
-	
-	selectMode = inputNumber();
+		//입력받은 주민 등록 번호와 저장된 주민등록 번호가 일치 하면 화면에 출력
+		for (i = 0; i < index; i++)
+		{
+			if (strcmp(inputsignNumber, save[i].signNumber) == 0)
+			{
+				//printf("ID : %d\n이름 : %s\n주소 : %s\n주민번호 : %s\nhp : %s\nemail : %s\n빌린책정보 : %d\n",
+				printf("%4d%8s%20s%15s%15s%20s%15d\n",
+					save[i].id, save[i].name, save[i].address, save[i].signNumber, save[i].phoneNumber,
+					save[i].email, save[i].bookList[0]);
 
-	system("cls");
-	//메뉴 선택에 따라 기능
-	if (selectMode == 1)
-	{
-		fixMember(choiceUser, index);
-	}
-	if (selectMode == 2)
-	{
-		deleteMember(choiceUser, index);
-	}
-	if (selectMode == 0)
-	{
-		return;
+				for (j = 1; j < MAXBOOK; j++)
+				{
+					printf("%4s%8s%20s%15s%15s%20s%15d\n",
+						"", "", "", "", "", "", save[i].bookList[i]);
+					//printf("%14d\n", member[i].bookList[j]);
+				}
+				puts("---------------------------------------------------------------------------------------------------");
+
+			}
+		}
+
+		printf("수정 또는 삭제하실 회원 번호를 입력 하세요\n");
+		choiceUser = inputNumber();
+
+		system("cls");
+		printf("수정 또는 삭제를 선택 하세요\n");
+		printf("1. 수정\n");
+		printf("2. 삭제\n");
+		printf("0. 이전 메뉴로\n");
+		printf("선택 : ");
+
+		selectMode = inputNumber();
+
+		system("cls");
+		//메뉴 선택에 따라 기능
+		switch (selectMode)
+		{
+		case 1: {fixMember(choiceUser, index); }
+				break;
+		case 2: {deleteMember(choiceUser, index); }
+				break;
+		case 0: {return; }
+		default: {return; }
+				 break;
+		}
 	}
 }
 
@@ -333,7 +346,7 @@ void fixMember(int num, int index)
 		{
 			//파일 포인터 선언
 			FILE *fp;
-			
+
 			//파일 열기,에러 체크
 			if ((fp = _fsopen("memberInfo.txt", "r", _SH_DENYNO)) == NULL)
 			{
@@ -382,8 +395,8 @@ void fixMember(int num, int index)
 			//파일 닫기
 			fclose(fp);
 
-			printf("바꿀 email 주소를 입력 하세요.\n");			
-			inputString(save[num - 1].email);			
+			printf("바꿀 email 주소를 입력 하세요.\n");
+			inputString(save[num - 1].email);
 			printf("email 수정이 완료 되었습니다.\n");
 			Sleep(1000);
 			system("cls");
@@ -481,9 +494,9 @@ void deleteMember(int num, int index)
 	}
 	puts("");
 	printf("입력 : ");
-	
+
 	inputString(inputDeletetext);
-	
+
 	for (i = 0; i < 2; i++)
 	{
 		if ((strlen(inputDeletetext) != 5))
@@ -503,7 +516,7 @@ void deleteMember(int num, int index)
 			puts("");
 
 			printf("입력 : ");
-			inputString(inputDeletetext);			
+			inputString(inputDeletetext);
 		}
 
 		else if (strlen(inputDeletetext) == 5 && (strncmp(inputDeletetext, deleteText, 5) != 0))
@@ -522,9 +535,9 @@ void deleteMember(int num, int index)
 			}
 			puts("");
 
-			printf("입력 : "); 
+			printf("입력 : ");
 			inputString(inputDeletetext);
-			
+
 		}
 		else if ((strlen(inputDeletetext) == 5) && (strncmp(inputDeletetext, deleteText, 5) == 0))
 		{
@@ -562,12 +575,6 @@ void deleteMember(int num, int index)
 	fclose(fp);
 }
 
-//검색 후 출력
-void printMember(int index)
-{
-	
-	//이전 메뉴로 만들기
-}
 
 //< 회원 출력
 void memberOutput(void)
