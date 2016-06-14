@@ -1,6 +1,5 @@
 #include "MemberManagement.h"
 
-
 /*
 1. 회원정보관리
 
@@ -88,7 +87,7 @@ int limitInput(char* str, const int length)
 		int num = 0;
 		inputString(str);
 		num = strlen(str);
-		if (num >= length)
+		if (num > length)
 		{
 			puts("입력오류:글자제한초과");
 		}
@@ -166,7 +165,7 @@ void registrationMember(void)
 		switch (inputCommand)
 		{
 			//< 종료
-		case END: { system("pause"); return; }break;
+		case END: { return; }break;
 			//< 가입
 		case REGESTRATION:
 		{
@@ -181,19 +180,17 @@ void registrationMember(void)
 			(ID , 도서명 )(ID는 도서등록시 부여된ID)
 			*/
 			//< 정보입력
-			while (TRUE)
-			{
-				printf("이름 : ");
-				limitInput(member.name, MAX_LENGTH);
-				printf("주소 : ");
-				limitInput(member.address, MAX_LENGTH);
-				printf("주민번호 : ");
-				limitInput(member.signNumber, MAXSIGN);
-				printf("핸드폰번호 : ");
-				limitInput(member.phoneNumber, MAX_LENGTH);
-				printf("E-Mail : ");
-				limitInput(member.email, MAX_LENGTH);
-			}
+			printf("이름 : ");
+			limitInput(member.name, MAX_LENGTH);
+			printf("주소 : ");
+			limitInput(member.address, MAX_LENGTH);
+			printf("주민번호 : ");
+			limitInput(member.signNumber, MAXSIGN);
+			printf("핸드폰번호 : ");
+			limitInput(member.phoneNumber, MAX_LENGTH);
+			printf("E-Mail : ");
+			limitInput(member.email, MAX_LENGTH);
+			
 			for (i = 0; i < MAXBOOK; i++)
 			{
 				member.bookList[i] = 0;
@@ -594,12 +591,6 @@ void memberOutput(void)
 
 	//< 화면지우기
 	system("cls");
-	puts("------------------------------------------- 회원정보 ----------------------------------------------");
-	puts("");
-	printf("%4s%8s%20s%15s%15s%20s%15s\n",
-		"ID", "이름", "주소", "주민번호", "hp", "email", "빌린책정보");
-	puts("");
-	puts("---------------------------------------------------------------------------------------------------");
 	//< 파일 체크
 	if ((indexFp = fileOpen("index.txt", "r")) == NULL)
 	{
@@ -633,6 +624,14 @@ void memberOutput(void)
 		//< 파일 닫기
 		fclose(fp);
 	}
+
+	puts("------------------------------------------- 회원정보 ----------------------------------------------");
+	puts("");
+	printf("%4s%8s%20s%15s%15s%20s%15s\n",
+		"ID", "이름", "주소", "주민번호", "hp", "email", "빌린책정보");
+	puts("");
+	puts("---------------------------------------------------------------------------------------------------");
+
 	for (i = 0; i < maxIndex; i++)
 	{
 		//printf("ID : %d\n이름 : %s\n주소 : %s\n주민번호 : %s\nhp : %s\nemail : %s\n빌린책정보 : %d\n",
