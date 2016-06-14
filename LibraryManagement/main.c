@@ -20,6 +20,7 @@ int main(int argc, char *argv[])
 				checkFile();
 				//< 회원 관리
 				registrator(); 
+
 			}
 			break;
 		case BOOK_M:
@@ -39,7 +40,6 @@ int main(int argc, char *argv[])
 			}
 			break;
 	}
-
 
 	return 0;
 }
